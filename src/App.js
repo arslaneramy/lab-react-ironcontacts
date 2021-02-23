@@ -3,34 +3,31 @@ import "./App.css";
 import contacts from "./contacts.json";
 // import ButtonToSayHello from "./components/AddRandomContact";
 
+function compareName(a,b){
+  if (a.name < b.name){
+    return -1;
+  } else if (a.name > b.name){
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function compareP (a,b){
+  if (a.popularity < b.popularity){
+    return -1;
+  } else if (a.popularity > b.popularity){
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 class App extends React.Component {
   state = {
     actors: contacts.slice(0, 5),
   };
-
-
-
-  // handleDelete = (movieId) => {
-
-  //   // Filter the movies from the state to remove one
-  //   const filteredMovies = this.state.movies.filter((movie) => {
-
-  //     if (movie._id !== movieId) {
-  //       return true;  // include the movie in the new array
-  //     }
-  //     else if (movie._id === movieId) {
-  //       return false; // exclude the movie from the new array
-  //     }
-  //     // a bit shorter way:
-  //     // const isMovieToDelete = !movie._id === movieId;
-  //     // return isMovieToDelete
-  //   });
-
-  //   this.setState({ movies: filteredMovies });
-
-  // }
-
-
+  
 
  addRandom = (actorsId) => {
    const newArray = [...this.state.actors]
@@ -39,30 +36,60 @@ class App extends React.Component {
   this.setState({actors : newArray})
  }
 
+ SortName = () => {
+  this.setState({
+    actors: [...this.state.actors].sort(compareName)
+  })
+}
+SortPopularity = () => {
+  this.setState({
+    actors: [...this.state.actors].sort(compareP)
+  })
+}
+
+deleteActor = (actorId) => {
+  const deletedActor = this.state.actors.filter((actor) => {
+    if(actor.id !== actorId) {
+      return true; 
+    } else if(actor.id === actorId) {
+      return false; 
+    }
+  })
+  this.setState ({actors: deletedActor});
+}
+
+
 
   render() {
     return (
       <div className="App">
         <h1>Iron Contact</h1>
-
         <button onClick={() => {this.addRandom()}}>Add celebrity</button>
-        
+        <button onClick={this.SortName}> Sort by Name </button>
+        <button onClick={this.SortPopularity}> Sort by Popularity </button>
+       
+       
         {this.state.actors.map((contact) => {
           return (
             <table>
-              
               <th>
                 <img className="actorImg" src={contact.pictureUrl} img />{" "}
               </th>
-
               <th className="contact">{contact.name}</th>
               <th>{contact.popularity}</th>
+              <button onClick={()=>{this.deleteActor(contact.id)} } > Delete </button>
             </table>
+
+           
+           // <button onClick={() => }>Sort by Popularity</button>
+
+           
+
+ 
           );
         })}
       </div>
     );
   }
  }
-
 export default App;
